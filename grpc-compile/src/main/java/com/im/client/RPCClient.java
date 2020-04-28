@@ -21,7 +21,7 @@ public class RPCClient {
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(channel);
 
         String localIP = IPUtil.getLocalIP();
-        int pid = ProcessUtil.getProcess(RPCClient.class);
+        int pid = ProcessUtil.getProcess();
 
         for (; ; ) {
             HelloRequest request = HelloRequest.newBuilder()

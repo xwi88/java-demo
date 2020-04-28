@@ -18,7 +18,7 @@ public class GreeterServiceImpl extends GreeterGrpc.GreeterImplBase {
         String requestName = request.getName();
         String requestNodeName = request.getNodeName();
 
-        System.out.printf("[%s] requestIP:%s,requestName:%s,requestNodeName:%s\n",
+        System.out.printf("[%s] requestIP:%s, requestName:%s, requestNodeName:%s\n",
                 new Date().toString(),
                 requestIP, requestName, requestNodeName);
 

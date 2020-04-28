@@ -48,6 +48,7 @@
     </profiles>
     <modules>
         <module>grpc-compile</module>
+        <module>grpc-etcd</module>
     </modules>
 
     <build>
