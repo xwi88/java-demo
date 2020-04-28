@@ -1,10 +1,12 @@
 package com.im.server;
 
 
+import com.im.client.RPCClient;
 import com.im.tutorial.GreeterGrpc;
 import com.im.tutorial.Helloworld.HelloRequest;
 import com.im.tutorial.Helloworld.HelloReply;
 import com.im.utils.IPUtil;
+import com.im.utils.ProcessUtil;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Date;
@@ -22,9 +24,11 @@ public class GreeterServiceImpl extends GreeterGrpc.GreeterImplBase {
                 requestIP, requestName, requestNodeName);
 
         String localIP = IPUtil.getLocalIP();
+        int pid = ProcessUtil.getProcess(RPCClient.class);
+
         HelloReply helloReply = HelloReply.newBuilder()
                 .setIp(localIP)
-                .setNodeName("server-java")
+                .setNodeName(String.format("server-java [pid=%s]", pid))
                 .setMessage(new Date().toString())
                 .build();
 

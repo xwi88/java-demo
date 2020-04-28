@@ -4,11 +4,12 @@ import com.im.tutorial.GreeterGrpc;
 import com.im.tutorial.Helloworld.HelloRequest;
 import com.im.tutorial.Helloworld.HelloReply;
 import com.im.utils.IPUtil;
+import com.im.utils.ProcessUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 
 public class RPCClient {
@@ -20,12 +21,13 @@ public class RPCClient {
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(channel);
 
         String localIP = IPUtil.getLocalIP();
+        int pid = ProcessUtil.getProcess(RPCClient.class);
 
-        for (int i = 0; ; i++) {
+        for (; ; ) {
             HelloRequest request = HelloRequest.newBuilder()
                     .setIp(localIP)
-                    .setName("client-java")
-                    .setNodeName("node-java")
+                    .setName(String.format("world %s", Calendar.getInstance().get(Calendar.SECOND)))
+                    .setNodeName(String.format("client-java [pid=%s]", pid))
                     .build();
 
             try {
