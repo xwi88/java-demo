@@ -6,11 +6,22 @@ import sun.jvmstat.monitor.MonitoredVm;
 import sun.jvmstat.monitor.MonitoredVmUtil;
 import sun.jvmstat.monitor.VmIdentifier;
 
+import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ProcessUtil {
+    public static int getProcess() {
+        // get name representing the running Java virtual machine.
+        // port@hostname
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        // get pid
+        String pid = name.split("@")[0];
+        return Integer.parseInt(pid);
+    }
+
+    // FIXME
     public static int getProcess(Class<?> cls) {
         if (cls == null) {
             return -1;
