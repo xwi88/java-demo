@@ -2,7 +2,6 @@ package com.im.discovery;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
@@ -17,6 +16,7 @@ import io.grpc.Attributes;
 import io.grpc.EquivalentAddressGroup;
 import io.grpc.NameResolver;
 
+import javax.annotation.concurrent.GuardedBy;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -43,6 +43,7 @@ public class EtcdNameResolver extends NameResolver implements Watch.Listener {
     EtcdNameResolver(List<URI> endpoints, String serviceDir) {
         this.etcd = Client.builder()
                 .endpoints(endpoints)
+                .loadBalancerPolicy("round_robin")
                 .build();
         this.serviceDir = serviceDir;
         this.serviceUris = new HashSet<>();
@@ -105,7 +106,6 @@ public class EtcdNameResolver extends NameResolver implements Watch.Listener {
                 case UNRECOGNIZED:
             }
         }
-
         updateListener();
     }
 
@@ -116,6 +116,7 @@ public class EtcdNameResolver extends NameResolver implements Watch.Listener {
 
     @Override
     public void onCompleted() {
+        logger.info("onCompleted");
     }
 
     private void initializeAndWatch() {

@@ -2,6 +2,7 @@ package com.im.server;
 
 
 import com.google.common.base.Charsets;
+import com.im.utils.IPUtil;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.lease.LeaseKeepAliveResponse;
@@ -22,10 +23,13 @@ public class DemoServer {
     private static final HashSet<String> ENDPOINTS = new HashSet<String>() {
         {
             add("http://127.0.0.1:2379");
+//            add("http://10.14.41.51:2379");
+//            add("http://10.14.41.52:2379");
+//            add("http://10.14.41.53:2379");
         }
     };
     private static final String SCHEME = "services";
-    private static final String SERVICE_NAME = "demand:engine/";
+    private static final String SERVICE_NAME = "demand:engine/v1/";
     private static final long TTL = 5L;
 
     private int port;
@@ -39,8 +43,9 @@ public class DemoServer {
     private void start() throws IOException, ExecutionException, InterruptedException {
         server = RPCServer.buildAndStartServer(port);
         logger.info("Server started on port:" + port);
-
-        final URI uri = URI.create("localhost:" + port);
+        String localIP = IPUtil.getLocalIP();
+        String scheme = "http";
+        final URI uri = URI.create(scheme + "://" + localIP + ":" + port);
         this.etcdClient = Client.builder()
                 .endpoints(ENDPOINTS.stream().map(URI::create).collect(Collectors.toList()))
                 .build();

@@ -13,7 +13,6 @@
 
     <properties>
         <!--            latest 1.29.0-->
-        <!--        <io.grpc.version>1.26.0</io.grpc.version>-->
         <io.grpc.version>1.28.1</io.grpc.version>
         <jetcd.version>0.5.3</jetcd.version>
         <org.slf4j.version>1.7.30</org.slf4j.version>

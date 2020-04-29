@@ -24,14 +24,18 @@ public class RPCClient {
     private static final Logger logger = Logger.getLogger(RPCClient.class.getName());
     private static final String defaultLoadBalancingPolicy = "round_robin";
     private static final String ENDPOINT = "http://127.0.0.1:2379";
-    private static final String TARGET = "demand:engine";
+    private static final String TARGET = "demand:engine/v1";
 
     private final ManagedChannel channel;
     private final GreeterGrpc.GreeterBlockingStub blockingStub;
+    private static RPCClient client;
 
     public RPCClient() {
         List<URI> endpoints = new ArrayList<>();
         endpoints.add(URI.create(ENDPOINT));
+//        endpoints.add(URI.create("http://10.14.41.51:2379"));
+//        endpoints.add(URI.create("http://10.14.41.52:2379"));
+//        endpoints.add(URI.create("http://10.14.41.53:2379"));
         this.channel = ManagedChannelBuilder.forTarget(TARGET)
                 .nameResolverFactory(EtcdNameResolverProvider.forEndpoints(endpoints))
                 .defaultLoadBalancingPolicy(defaultLoadBalancingPolicy)
@@ -60,6 +64,7 @@ public class RPCClient {
             response = blockingStub.sayHello(request);
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+            client = new RPCClient();
             return;
         }
         logger.info(String.format("[end] %s reply:%s", new Date().toString(),
@@ -71,16 +76,14 @@ public class RPCClient {
      * greeting.
      */
     public static void main(String[] args) throws Exception {
-        RPCClient client = new RPCClient();
+        client = new RPCClient();
         try {
             while (true) {
                 client.sayHello();
-                Thread.sleep(1000L);
+                Thread.sleep(2000L);
             }
         } finally {
-            if (client != null) {
-                client.shutdown();
-            }
+            client.shutdown();
         }
     }
 }
